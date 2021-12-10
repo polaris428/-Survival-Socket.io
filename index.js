@@ -70,13 +70,25 @@ io.on('connection',function(socket) {
       }
        var ran=rand(1,20)
         console.log(ran)
-       if(ran==15){
+       if(ran==30){
        io.to(`${roomName}`).emit('makeBox',JSON.stringify
        (UserCoordinate))   
        }
 
        
-      
+
+    })
+
+    socket.on("getItem",function(){
+        var ran=rand(1,4)
+        console.log(ran)
+        switch(ran){
+          case 1:
+            var item =rand(1,5)
+
+
+        }
+
 
     })
     
