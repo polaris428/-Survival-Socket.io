@@ -18,6 +18,9 @@ var server = app.listen(3000,()=>{
 //Chat Server
 
 var io = socketio(server)
+//io.emit //모두
+//socket.emit //자기자신
+
 
 io.on('connection',function(socket) {
 
@@ -48,7 +51,7 @@ io.on('connection',function(socket) {
 
 
     })
-    
+    //경로 업데이트
     socket.on("UpdataCoordinate",function(data){
        const room_data = JSON.parse(data)
        const roomName = room_data.roomName;
@@ -68,9 +71,10 @@ io.on('connection',function(socket) {
        function rand(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
       }
-       var ran=rand(1,20)
+       var ran=rand(1,30)
         console.log(ran)
        if(ran==30){
+         //아이템 생성 
        io.to(`${roomName}`).emit('makeBox',JSON.stringify
        (UserCoordinate))   
        }
@@ -78,16 +82,62 @@ io.on('connection',function(socket) {
        
 
     })
+     //아이템을얻었을때
+    
+    socket.on("deleteitem",function(){
 
-    socket.on("getItem",function(){
-        var ran=rand(1,4)
-        console.log(ran)
-        switch(ran){
-          case 1:
-            var item =rand(1,5)
+        io.to(`${roomName}`).emit('makeBox')   
+
+       
+     
+
+    })
+    //좀비를 만났을때
+     socket.on("meetzombies",function(){
+        
+        
+       socket.to(`${roomName}`).emit('meetzombies')
+      
+         
+        
 
 
-        }
+    })
+
+    socket.on("addBoom",function(data){
+      const room_data = JSON.parse(data)
+      const roomName = room_data.roomName;
+    
+        socket.join(`${roomName}`)
+      io.to(`${roomName}`).emit('addBoom')
+      
+         
+        
+
+
+    })
+     socket.on("addZombie",function(data){
+      const room_data = JSON.parse(data)
+      const roomName = room_data.roomName;
+    socket.join(`${roomName}`)
+        
+      io.to(`${roomName}`).emit('addZombie')
+      
+         
+        
+
+
+    })
+
+     socket.on("getItem",function(data){
+      const room_data = JSON.parse(data)
+      const roomName = room_data.roomName;
+    
+        socket.join(`${roomName}`)
+      io.to(`${roomName}`).emit('getItem')
+      
+         
+        
 
 
     })
@@ -96,6 +146,8 @@ io.on('connection',function(socket) {
     socket.on('disconnect', function () {
         console.log("One of sockets disconnected from our server.")
     });
+
+    
 
 })
 
